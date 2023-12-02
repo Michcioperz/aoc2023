@@ -8,14 +8,18 @@ enum Color {
     Green,
 }
 
+type Input = Vec<(GameId, Vec<Play>)>;
+type GameId = usize;
+type Play = Vec<(Color, usize)>;
+
 pub(crate) struct Day2;
 impl Day2 {
-    fn parsed_input(&self) -> Vec<(usize, Vec<Vec<(Color, usize)>>)> {
+    fn parsed_input(&self) -> Input {
         self.input()
             .lines()
             .map(|line| {
                 let (prefix, games) = line.split_once(": ").unwrap();
-                let (_, id_s) = prefix.split_once(" ").unwrap();
+                let (_, id_s) = prefix.split_once(' ').unwrap();
                 let id: usize = id_s.parse().unwrap();
                 (
                     id,
@@ -24,7 +28,7 @@ impl Day2 {
                         .map(|game| {
                             game.split(", ")
                                 .map(|pull| {
-                                    let (count_s, color_s) = pull.split_once(" ").unwrap();
+                                    let (count_s, color_s) = pull.split_once(' ').unwrap();
                                     let count: usize = count_s.parse().unwrap();
                                     let color = match color_s {
                                         "blue" => Color::Blue,
