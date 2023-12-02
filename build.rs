@@ -20,38 +20,57 @@ fn main() -> color_eyre::Result<()> {
         })
         .collect();
 
-    let out_path = Utf8PathBuf::from(env::var("OUT_DIR")?).join("inputs.rs");
+    let out_path = Utf8PathBuf::from(env::var("OUT_DIR")?).join("generated.rs");
     {
         let f = fs::File::create(out_path)?;
         let mut f = BufWriter::new(f);
+        writeln!(&mut f, "use prelude::*; use clap::ValueEnum;")?;
 
-        writeln!(&mut f, "#[derive(ValueEnum, Clone, Copy, Debug)]
-        pub enum Task {{")?;
+        writeln!(
+            &mut f,
+            "#[derive(ValueEnum, Clone, Copy, Debug)]
+        pub enum Task {{"
+        )?;
         for (day, _) in &inputs {
-            writeln!(&mut f, "
+            writeln!(
+                &mut f,
+                "
                 #[value(name = \"{day}a\")] Day{day}A,
                 #[value(name = \"{day}b\")] Day{day}B,
-            ")?;
+            "
+            )?;
         }
-        writeln!(&mut f, "}}
+        writeln!(
+            &mut f,
+            "}}
         impl Task {{
             pub fn run(self) -> Result<String> {{
-                match self {{")?;
+                match self {{"
+        )?;
         for (day, _) in &inputs {
-            writeln!(&mut f, "
-                Self::Day{day}A => Day{day}.solve_a(),
-                Self::Day{day}B => Day{day}.solve_b(),
-            ")?;
+            writeln!(
+                &mut f,
+                "
+                Self::Day{day}A => day{day}::Day{day}.solve_a(),
+                Self::Day{day}B => day{day}::Day{day}.solve_b(),
+            "
+            )?;
         }
-        writeln!(&mut f, "
+        writeln!(
+            &mut f,
+            "
                 }}
             }}
-        }}")?;
+        }}"
+        )?;
 
         for (day, contents) in &inputs {
-            writeln!(&mut f, "impl DayInput for Day{day} {{
+            writeln!(
+                &mut f,
+                "impl DayInput for day{day}::Day{day} {{
                 const CONTENTS: &'static str = {contents:?};
-            }}")?;
+            }}"
+            )?;
         }
 
         drop(f.into_inner()?);

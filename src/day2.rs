@@ -1,7 +1,5 @@
+use crate::prelude::*;
 use std::collections::HashMap;
-
-use crate::{TaskA, TaskB};
-use color_eyre::Result;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 enum Color {
