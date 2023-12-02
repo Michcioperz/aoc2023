@@ -63,6 +63,9 @@ impl TaskB for Day1 {
     }
 }
 
+use day2::Day2;
+mod day2;
+
 include!(concat!(env!("OUT_DIR"), "/inputs.rs"));
 
 pub trait DayInput {
