@@ -28,7 +28,10 @@ fn main() -> color_eyre::Result<()> {
         writeln!(&mut f, "#[derive(ValueEnum, Clone, Copy, Debug)]
         pub enum Task {{")?;
         for (day, _) in &inputs {
-            writeln!(&mut f, "A{day}, B{day},")?;
+            writeln!(&mut f, "
+                #[value(name = \"{day}a\")] Day{day}A,
+                #[value(name = \"{day}b\")] Day{day}B,
+            ")?;
         }
         writeln!(&mut f, "}}
         impl Task {{
@@ -36,8 +39,8 @@ fn main() -> color_eyre::Result<()> {
                 match self {{")?;
         for (day, _) in &inputs {
             writeln!(&mut f, "
-                Self::A{day} => Day{day}.solve_a(),
-                Self::B{day} => Day{day}.solve_b(),
+                Self::Day{day}A => Day{day}.solve_a(),
+                Self::Day{day}B => Day{day}.solve_b(),
             ")?;
         }
         writeln!(&mut f, "

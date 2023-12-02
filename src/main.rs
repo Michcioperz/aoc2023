@@ -19,6 +19,6 @@ fn main() -> Result<()> {
 #[command(author, version, about)]
 struct Cli {
     task: Task,
-    #[arg(long)]
+    #[arg(short, long)]
     custom_input: bool,
 }
