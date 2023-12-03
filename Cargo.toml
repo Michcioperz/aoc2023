@@ -15,3 +15,8 @@ anyhow = "1.0.75"
 camino = "1.1.6"
 color-eyre = "0.6.2"
 fs-err = "2.11.0"
+
+[profile.dev]
+opt-level = 1
+[profile.dev.package."*"]
+opt-level = 3
