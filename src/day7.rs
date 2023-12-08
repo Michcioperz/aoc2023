@@ -50,15 +50,15 @@ impl From<&[u8]> for Hand {
         });
         if counts.len() == 1 {
             Hand::FiveOfAKind
-        } else if counts.values().find(|v| **v == 4).is_some() {
+        } else if counts.values().any(|v| *v == 4) {
             Hand::FourOfAKind
         } else if counts.len() == 2 {
             Hand::FullHouse
-        } else if counts.values().find(|v| **v == 3).is_some() {
+        } else if counts.values().any(|v| *v == 3) {
             Hand::ThreeOfAKind
         } else if counts.values().filter(|v| **v == 2).count() == 2 {
             Hand::TwoPair
-        } else if counts.values().find(|v| **v == 2).is_some() {
+        } else if counts.values().any(|v| *v == 2) {
             Hand::OnePair
         } else {
             Hand::HighCard
@@ -93,7 +93,7 @@ impl Day7 {
             .lines()
             .map(|line| {
                 let (hand, bid) = line.split_once(' ').unwrap();
-                let hand = hand.chars().map(|c| parse_card(c)).collect();
+                let hand = hand.chars().map(parse_card).collect();
                 (hand, bid.parse().unwrap())
             })
             .collect()

@@ -1,4 +1,5 @@
 use crate::prelude::*;
+use std::fmt::Write;
 
 pub struct Day201510;
 impl Day201510 {
@@ -6,8 +7,10 @@ impl Day201510 {
         s.chars()
             .group_by(|x| *x)
             .into_iter()
-            .map(|(digit, group)| format!("{}{}", group.count(), digit))
-            .collect()
+            .fold(String::new(), |mut acc, (digit, group)| {
+                write!(acc, "{}{}", group.count(), digit).unwrap();
+                acc
+            })
     }
 }
 impl TaskA for Day201510 {

@@ -234,7 +234,7 @@ impl TaskA for Day5 {
                     {
                         item.1 = new_item;
                     } else {
-                        item.1 = item.1;
+                        // item.1 = item.1;
                     }
                 }
                 item.1

@@ -27,13 +27,13 @@ impl Day201506 {
                 .unwrap()
                 .split_once(',')
                 .unwrap()
-                .as_iter(|it| it.map(|i| i.parse().unwrap()));
+                .via_iter(|it| it.map(|i| i.parse().unwrap()));
             let to = it
                 .last()
                 .unwrap()
                 .split_once(',')
                 .unwrap()
-                .as_iter(|it| it.map(|i| i.parse().unwrap()));
+                .via_iter(|it| it.map(|i| i.parse().unwrap()));
             (instruction, from, to)
         })
     }
@@ -48,10 +48,13 @@ impl TaskA for Day201506 {
                 Instruction::Off => |b: &mut bool| *b = false,
                 Instruction::Toggle => |b: &mut bool| *b = !*b,
             };
-            for i in from_i..=to_i {
-                for j in &mut grid[i][from_j..=to_j] {
-                    op(j);
-                }
+            for light in grid
+                .get_mut(from_i..=to_i)
+                .unwrap()
+                .iter_mut()
+                .flat_map(|row| row.get_mut(from_j..=to_j).unwrap())
+            {
+                op(light);
             }
         }
         Ok(grid
@@ -70,10 +73,13 @@ impl TaskB for Day201506 {
                 Instruction::Off => |b: &mut usize| *b = b.saturating_sub(1),
                 Instruction::Toggle => |b: &mut usize| *b += 2,
             };
-            for i in from_i..=to_i {
-                for j in &mut grid[i][from_j..=to_j] {
-                    op(j);
-                }
+            for light in grid
+                .get_mut(from_i..=to_i)
+                .unwrap()
+                .iter_mut()
+                .flat_map(|row| row.get_mut(from_j..=to_j).unwrap())
+            {
+                op(light);
             }
         }
         Ok(grid

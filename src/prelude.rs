@@ -48,7 +48,7 @@ pub trait PairFun {
     type Item;
     type I: IntoIterator<Item = Self::Item>;
     type SelfU<U>;
-    fn as_iter<U, J: Iterator<Item = U>, F: FnOnce(<Self::I as IntoIterator>::IntoIter) -> J>(
+    fn via_iter<U, J: Iterator<Item = U>, F: FnOnce(<Self::I as IntoIterator>::IntoIter) -> J>(
         self,
         f: F,
     ) -> Self::SelfU<U>;
@@ -60,7 +60,7 @@ impl<T> PairFun for (T, T) {
 
     type SelfU<U> = (U, U);
 
-    fn as_iter<U, J: Iterator<Item = U>, F: FnOnce(<Self::I as IntoIterator>::IntoIter) -> J>(
+    fn via_iter<U, J: Iterator<Item = U>, F: FnOnce(<Self::I as IntoIterator>::IntoIter) -> J>(
         self,
         f: F,
     ) -> Self::SelfU<U> {
