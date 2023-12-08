@@ -12,10 +12,17 @@ fn main() -> color_eyre::Result<()> {
     let inputs: Vec<_> = fs::read_dir("inputs")?
         .map(|entry_result| entry_result.unwrap())
         .map(|entry| Utf8PathBuf::from_path_buf(entry.path()).unwrap())
+        .filter(|path| {
+            path.file_stem()
+                .and_then(|stem| stem.parse::<u32>().ok())
+                .is_some()
+        })
         .map(|path| {
             (
                 path.file_stem().unwrap().to_string(),
                 fs::read_to_string(&path).unwrap(),
+                fs::read_to_string(path.with_file_name(format!("{}t", path.file_name().unwrap())))
+                    .ok(),
             )
         })
         .collect();
@@ -31,7 +38,7 @@ fn main() -> color_eyre::Result<()> {
             "#[derive(ValueEnum, Clone, Copy, Debug)]
         pub enum Task {{"
         )?;
-        for (day, _) in &inputs {
+        for (day, _, _) in &inputs {
             writeln!(
                 &mut f,
                 "
@@ -47,7 +54,7 @@ fn main() -> color_eyre::Result<()> {
             pub fn run(self) -> Result<String> {{
                 match self {{"
         )?;
-        for (day, _) in &inputs {
+        for (day, _, _) in &inputs {
             writeln!(
                 &mut f,
                 "
@@ -64,13 +71,19 @@ fn main() -> color_eyre::Result<()> {
         }}"
         )?;
 
-        for (day, contents) in &inputs {
+        for (day, contents, test_contents) in &inputs {
             writeln!(
                 &mut f,
                 "impl DayInput for day{day}::Day{day} {{
-                const CONTENTS: &'static str = {contents:?};
-            }}"
+                const CONTENTS: &'static str = {contents:?};"
             )?;
+            if let Some(test_contents) = test_contents {
+                writeln!(
+                    &mut f,
+                    "const TEST_CONTENTS: Option<&'static str> = Some({test_contents:?});"
+                )?;
+            }
+            writeln!(&mut f, "}}")?;
         }
 
         drop(f.into_inner()?);
