@@ -10,5 +10,6 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 pub mod prelude;
 include!(concat!(env!("OUT_DIR"), "/generated.rs"));
